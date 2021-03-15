@@ -1,0 +1,10 @@
+.App {
+  text-align: center;
+}
+
+body{
+  background-color: #212121;
+  color: white;
+  overflow-x: hidden;
+  margin-top: 4em;
+}
