@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Navbar from "./components/elements/Navbar";
 import ChannelPage from "./components/channels/ChannelPage";
+import CommentsPage from "./components/comments/CommentsPage";
 import {getStoredToken} from './utils/verifyToken';
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/channel" component={ChannelPage} />
+          <Route path="/comments" component={CommentsPage} />
         </Switch>
       </div>
     </Router>
