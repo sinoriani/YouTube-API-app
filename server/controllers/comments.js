@@ -29,3 +29,34 @@ exports.getVideoComments = asyncHandler(async (req, res, next) => {
         })
 
 })
+
+exports.addComment = asyncHandler(async (req, res, next) => {
+    oauth2Client.credentials = queryToObj(req.query)
+    let options = {
+        auth: oauth2Client,
+        part:"snippet",
+        snippet: {
+            "videoId": req.body.data.videoId,
+            "channelId": req.body.data.channelId,
+            "topLevelComment": {
+              "snippet": {
+                "textOriginal": req.body.data.content
+              }
+            }
+        }
+    }
+
+    console.log(options.snippet)
+
+
+    youtube.commentThreads
+        .insert(options)
+        .then(function (response) {
+            res.status(200).json(response)
+        })
+        .catch((error) => {
+            console.log(error)
+            res.status(422).json(error)
+        })
+
+})
