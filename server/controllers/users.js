@@ -56,3 +56,37 @@ con.connect(function(err) {
     message:"user created"
   })
 }
+
+
+exports.updatePoints = async(req,res,next)=>{
+   //connect database
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "youtube_bd"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
+
+//take user body 
+const points = req.body.points
+const id = +req.body.id
+
+//prepare sql query 
+var sql = `UPDATE user SET points = points + ${points} where id=${id};`  
+
+//execute sql query 
+con.query(sql,((error,result)=>{
+  if (error) throw error;
+  console.log(result)
+}))
+
+
+  res.status(200).json({
+    message:"points updated !"
+  })
+}
