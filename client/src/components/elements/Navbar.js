@@ -9,6 +9,10 @@ state = {
   isOpen: false
 };
 
+componentDidMount(){
+  console.log('ok',this.props.userInfo)
+}
+
 toggleCollapse = () => {
   this.setState({ isOpen: !this.state.isOpen });
 }
@@ -26,9 +30,9 @@ render() {
             <MDBNavItem >
               <MDBNavLink to="/">Home</MDBNavLink>
             </MDBNavItem>
-            <MDBNavItem>
+            {/* <MDBNavItem>
               <MDBNavLink to="/channel">Channel</MDBNavLink>
-            </MDBNavItem>
+            </MDBNavItem> */}
             
             
           </MDBNavbarNav>

@@ -6,7 +6,7 @@ const asyncHandler = require('../middleware/async')
 const {queryToObj} = require("../utils/queryCredentials")
 
 
-exports.getVideoComments = asyncHandler(async (req, res, next) => {
+exports.getComments = asyncHandler(async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
     let options = {
         auth: oauth2Client,
