@@ -70,7 +70,6 @@ exports.getVideoById = asyncHandler(async (req, res, next) => {
         .list(options)
         .then( response => {
             var video = response.data.items;
-            console.log(video);
             if (video == undefined ) {
                 res.status(400).send("no video found")
             } else {
