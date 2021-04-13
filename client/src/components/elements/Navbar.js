@@ -9,6 +9,10 @@ state = {
   isOpen: false
 };
 
+componentDidMount(){
+  console.log('ok',this.props.userInfo)
+}
+
 toggleCollapse = () => {
   this.setState({ isOpen: !this.state.isOpen });
 }
