@@ -6,6 +6,5 @@ const {updatePoints} = require('../controllers/users')
 const {protect} = require('../middleware/auth')
 
 usersRouter.route('/info').get(protect, getInfo);
-usersRouter.route('/create').post(createUser)
 usersRouter.route('/updatePoints').patch(updatePoints)
 exports.usersRouter = usersRouter;

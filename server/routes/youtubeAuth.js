@@ -2,14 +2,14 @@ var fs = require('fs');
 var readline = require('readline');
 var { google } = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
-
+const mysql = require('mysql')
 const express = require('express');
 const oauthRouter = express.Router();
 
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/youtube-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/youtube.readonly','https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/youtube.force-ssl'];
+var SCOPES = ['https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/youtube.force-ssl'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
   process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'youtube-nodejs-quickstart.json';
@@ -33,6 +33,8 @@ function getCreds() {
 }
 const { clientId, clientSecret, redirectUrl } = getCreds();
 
+
+
 // IMPORTANT
 // this route will be called by react with the code 
 // react will take care of saving the token to the browser storage
@@ -43,10 +45,11 @@ oauthRouter.get('/authorize', (req, res) => {
   oauth2Client.getToken(code, function (err, token) {
     if (err) {
       // console.log('Error while trying to retrieve access token', err);
-      return res.status(400).send({"msg":'Error while trying to retrieve access token'});
+      return res.status(400).send({ "msg": 'Error while trying to retrieve access token' });
+    } else {
+      // storeToken(token);
+      res.status(200).send({ "token": token })
     }
-    // storeToken(token);
-    res.status(200).send({"token": token})
   });
 })
 
@@ -77,7 +80,7 @@ module.exports = {
   redirectUrl,
   oauthRouter,
   SCOPES,
-  oauth2Client : new OAuth2(clientId, clientSecret, redirectUrl),
-  youtube : google.youtube('v3')
+  oauth2Client: new OAuth2(clientId, clientSecret, redirectUrl),
+  youtube: google.youtube('v3')
 
 }

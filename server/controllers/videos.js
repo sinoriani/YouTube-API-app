@@ -58,11 +58,9 @@ exports.getVideoById = asyncHandler(async (req, res, next) => {
     }
     let id = req.query.id
     if (id){
-        console.log('1 ' + id)
         options.id=id
     }
     else{
-        console.log('2')
         return res.status(400).send({'msg':"You forgot to include the id in the request's body"})
     }
  
@@ -73,7 +71,6 @@ exports.getVideoById = asyncHandler(async (req, res, next) => {
             if (video == undefined ) {
                 res.status(400).send("no video found")
             } else {
-                console.log("got it")
                 res.status(200).send(video)
             }
         })
