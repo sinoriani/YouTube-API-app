@@ -3,6 +3,7 @@ import '../../App.css';
 import {getStoredToken} from '../../utils/verifyToken';
 import axios from 'axios';
 import Channel from "./Channel"
+import { Link } from 'react-router-dom';
 
 function ChannelPage() {
 
@@ -20,7 +21,7 @@ function ChannelPage() {
         axios.get(url,{
             params: {
                 ...token,
-                id : "UC29ju8bIPH5as8OGnQzwJyA"
+                id : "UC-XIAtixv2iPu1SUDictyLQ"
             }
         }).then((response) => {
             console.log(response.data)
@@ -34,6 +35,7 @@ function ChannelPage() {
             <h1>Channel page</h1>
             <div>
                 <Channel title={title} description={description}  />
+                
             </div>
         </div>
     );

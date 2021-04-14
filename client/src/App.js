@@ -12,7 +12,9 @@ import Home from "./components/Home";
 import Navbar from "./components/elements/Navbar";
 import ChannelPage from "./components/channels/ChannelPage";
 import {getStoredToken} from './utils/verifyToken';
+import SubscriptionPage from './components/channels/subscription';
 import VideoPlayer from './components/videos/VideoPlayer';
+
 
 
 function App() {
@@ -41,7 +43,9 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/channel" component={ChannelPage} />
+          <Route path="/subscription" component={SubscriptionPage} />
           <Route path="/video/:id" component={VideoPlayer} />
+
         </Switch>
       </div>
     </Router>
