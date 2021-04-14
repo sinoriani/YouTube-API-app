@@ -90,14 +90,16 @@ exports.insertSubscription = asyncHandler(async (req, res, next) => {
     }
     youtube.subscriptions
         .insert(options)
-        .then(function (res) {
+        .then(function (response) {
             
-           
+                console.log(response);
                 res.status(200).send("ok")
                 
             
     })
     .catch(function (err) {
+        console.log(err);
+
         res.status(400).send("oops");  
     })
 
