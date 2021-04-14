@@ -1,5 +1,5 @@
 /server/client_secret.json
-
+/server/mysql_credentials.json
 # dependencies
 client/node_modules
 server/node_modules

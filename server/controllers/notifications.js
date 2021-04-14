@@ -10,3 +10,5 @@ exports.getNotifications = asyncHandler(async (req, res, next) => {
     // code goes here
 
 })
+
+

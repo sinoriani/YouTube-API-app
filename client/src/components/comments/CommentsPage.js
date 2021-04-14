@@ -5,7 +5,7 @@ import axios from 'axios';
 import Comment from "./Comment"
 import CommentForm from "./CommentForm"
 
-function CommentsPage() {
+function CommentsPage(props) {
 
     const [comments, setComments] = useState([]);
     const [channelID, setChannelID] = useState("");
@@ -32,10 +32,10 @@ function CommentsPage() {
         axios.get(url,{
             params: {
                 ...token,
-                videoId : "Zo1Yh3BYPVA"
+                videoId : props.videoId
             }
         }).then((response) => {
-            console.log(response.data)
+            console.log("aa",response.data)
             let list = []
 
             response.data.forEach(element => {
@@ -59,7 +59,7 @@ function CommentsPage() {
             {
                 method:"post",
                 data:{
-                    videoId : "Zo1Yh3BYPVA",
+                    videoId : props.videoId,
                     channelId: channelID,
                     content:content
                 }
@@ -86,11 +86,10 @@ function CommentsPage() {
 
     return (
         <div className="App">
-            <h1>Comments</h1>
             <div>
                 {/* <CommentForm onAdd={onAdd}  /> */}
             </div>
-            <div>
+            <div className="d-flex justify-content-center flex-column m-auto " style={{maxWidth:"1250px"}}>
                 {comments}
             </div>
         </div>

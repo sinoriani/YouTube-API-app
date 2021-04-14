@@ -30,9 +30,13 @@ render() {
             <MDBNavItem >
               <MDBNavLink to="/">Home</MDBNavLink>
             </MDBNavItem>
-            <MDBNavItem>
-              <MDBNavLink to="/channel">Channel</MDBNavLink>
-            </MDBNavItem>
+            {/* <MDBNavItem>
+                  <MDBNavLink to="/channel">Channel</MDBNavLink>
+                </MDBNavItem>
+                <MDBNavItem>
+                  <MDBNavLink to="/subscription">Subscription</MDBNavLink>
+                </MDBNavItem>*/}
+
             
             
           </MDBNavbarNav>

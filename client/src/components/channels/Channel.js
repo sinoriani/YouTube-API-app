@@ -6,6 +6,8 @@ const Channel = (props) => {
             <h3>Title: {props.title}</h3>
             <div>Description: {props.description}</div>
         </div>
+
+        
     )
 }
 

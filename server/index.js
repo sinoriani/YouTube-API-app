@@ -3,6 +3,8 @@ const path = require('path')
 const app = express();
 const cors = require('cors');
 
+
+
 // body parser
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -36,9 +38,12 @@ app.use(express.static(path.join(__dirname,'public')))
 const PORT  = process.env.PORT || 5000;
 app.listen(PORT, () => console.log('Server started on port ' + PORT))
 
+
+
+
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-    console.log(`Error: ${err.message}`.red)
+    console.log('Error: ${err.message}'.red)
     // Close server & exit process
     //server.close(() => process.exit(1))
   })
