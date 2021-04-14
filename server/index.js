@@ -3,6 +3,8 @@ const path = require('path')
 const app = express();
 const cors = require('cors');
 
+
+
 // body parser
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -14,6 +16,10 @@ const {usersRouter} = require('./routes/users')
 const {commentsRouter} = require('./routes/comments')
 const {historyRouter} = require('./routes/history')
 const {notificationsRouter} = require('./routes/notifications')
+const {videosRouter} = require('./routes/videos')
+
+// Enable CORS
+app.use(cors())
 
 app.use('/oauth', oauthRouter)
 app.use('/channels', channelsRouter)
@@ -21,9 +27,9 @@ app.use('/users', usersRouter)
 app.use('/comments', commentsRouter)
 app.use('/history', historyRouter)
 app.use('/notifications', notificationsRouter)
+app.use('/videos', videosRouter)
 
-// Enable CORS
-app.use(cors())
+
 
 // set a static folder
 app.use(express.static(path.join(__dirname,'public')))
@@ -31,6 +37,9 @@ app.use(express.static(path.join(__dirname,'public')))
 
 const PORT  = process.env.PORT || 5000;
 app.listen(PORT, () => console.log('Server started on port ' + PORT))
+
+
+
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {

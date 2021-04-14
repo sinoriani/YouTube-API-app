@@ -11,9 +11,10 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Navbar from "./components/elements/Navbar";
 import ChannelPage from "./components/channels/ChannelPage";
-import CommentsPage from "./components/comments/CommentsPage";
 import {getStoredToken} from './utils/verifyToken';
 import SubscriptionPage from './components/channels/subscription';
+import VideoPlayer from './components/videos/VideoPlayer';
+
 
 
 function App() {
@@ -36,14 +37,15 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Navbar profilePic={userInfo.picture} />
+        <Navbar userInfo={userInfo} profilePic={userInfo.picture} />
         <div>Hello {userInfo.name}</div>
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/channel" component={ChannelPage} />
-          <Route path="/comments" component={CommentsPage} />
           <Route path="/subscription" component={SubscriptionPage} />
+          <Route path="/video/:id" component={VideoPlayer} />
+
         </Switch>
       </div>
     </Router>

@@ -3,38 +3,93 @@ import '../../App.css';
 import {getStoredToken} from '../../utils/verifyToken';
 import axios from 'axios';
 import Comment from "./Comment"
+import CommentForm from "./CommentForm"
 
-function CommentsPage() {
+function CommentsPage(props) {
 
     const [comments, setComments] = useState([]);
+    const [channelID, setChannelID] = useState("");
 
     useEffect(() => {
         let token = getStoredToken();
         getCommentsData(token);
     }, [])
 
-    const getCommentsData = async (token) => {
-        let url = "/comments/get";
-        console.log(url)
+    const getMyChannelId = async (token) => {
+        let url = "/channels/get";
         axios.get(url,{
             params: {
                 ...token,
-                videoId : "L72fhGm1tfE"
+                mine : true
             }
         }).then((response) => {
-            // console.log(response.data)
+            setChannelID(response.data[0].id)
+        });
+    }
+
+    const getCommentsData = async (token) => {
+        let url = "/comments/get";
+        axios.get(url,{
+            params: {
+                ...token,
+                videoId : props.videoId
+            }
+        }).then((response) => {
+            console.log("aa",response.data)
             let list = []
+
             response.data.forEach(element => {
-                list.push( <Comment key={element.id} name={element.snippet.topLevelComment.snippet.authorDisplayName} comment={element.snippet.topLevelComment.snippet.textOriginal}  />)
+                list.push( <Comment key={element.id} 
+                    image={element.snippet.topLevelComment.snippet.authorProfileImageUrl} 
+                    name={element.snippet.topLevelComment.snippet.authorDisplayName} 
+                    comment={element.snippet.topLevelComment.snippet.textOriginal}  />)
             });
             setComments(list);
         });
     }
 
+    const onAdd = (content) => {
+        let token = getStoredToken();
+        getMyChannelId(token)
+
+        let url = "/comments/add";
+        console.log(channelID)
+        axios.post(
+            url,
+            {
+                method:"post",
+                data:{
+                    videoId : props.videoId,
+                    channelId: channelID,
+                    content:content
+                }
+            },
+            {
+                params: {
+                    ...token,
+                   
+                }
+        }).then((response) => {
+            console.log(response)
+            // let list = []
+            // response.data.forEach(element => {
+            //     list.push( <Comment key={element.id} 
+            //         image={element.snippet.topLevelComment.snippet.authorProfileImageUrl} 
+            //         name={element.snippet.topLevelComment.snippet.authorDisplayName} 
+            //         comment={element.snippet.topLevelComment.snippet.textOriginal}  />)
+            // });
+            // setComments(list);
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+
     return (
         <div className="App">
-            <h1>Comments</h1>
             <div>
+                {/* <CommentForm onAdd={onAdd}  /> */}
+            </div>
+            <div className="d-flex justify-content-center flex-column m-auto " style={{maxWidth:"1250px"}}>
                 {comments}
             </div>
         </div>
