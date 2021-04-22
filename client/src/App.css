@@ -7,6 +7,8 @@ body{
   color: white;
   overflow-x: hidden;
   margin-top: 4em;
+  padding: 0;
+  text-align: center;
 }
 
 .comment{
@@ -29,4 +31,52 @@ body{
 
 .text-dim{
   color: rgb(216, 216, 216);
+}
+
+.sidebar{
+  padding-top: 15px;
+  background-color: #C62828;
+  height: 800px;
+}
+
+.side{
+  
+  width: 15%;
+  float: left;
+}
+
+.content{
+  height: 100%;
+  width: 85%;
+  float: right;
+  
+}
+
+.sidebarlist{
+  height: auto;
+  padding: 0;
+  width: 100%;
+ 
+}
+
+.sidebarlist .row{
+  width: 100%;
+  height: 40px;
+  list-style-type: none;
+  margin: 0%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+}
+.sidebarlist .row:hover{
+  cursor: pointer;
+  background-color: #212121;
+}
+.mysub{
+  background-color: #212121;
+  height: 50px;
+ padding-top: 10px;
+ font-weight: bold;
 }

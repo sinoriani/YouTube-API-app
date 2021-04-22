@@ -104,3 +104,28 @@ exports.insertSubscription = asyncHandler(async (req, res, next) => {
     })
 
 })
+
+exports.mySubscriptions = asyncHandler(async (req, res, next) => {
+    oauth2Client.credentials = queryToObj(req.query)
+    let options = {
+        auth: oauth2Client,
+        part: 'snippet', 
+        mine: true ,
+        maxResults: 10,
+    }
+
+    
+    youtube.subscriptions
+    .list(options)
+    .then(function (response)  {
+        console.log(response);
+        var channels = response.data.items;
+        if (channels == undefined ) {
+            res.status(400).send("no susbscriptions")
+        } else {
+            res.status(200).json(channels)
+        }
+        
+})
+
+})
