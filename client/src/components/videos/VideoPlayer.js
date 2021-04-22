@@ -46,8 +46,8 @@ const VideoPlayer = (props) => {
 
     return ( 
         <div className="m-1 " >
-            <div className="m-auto p-3" style={{maxWidth:"1280px"}} >
-                <iframe width="1280" height="720" src={"https://www.youtube.com/embed/" + props.match.params.id} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+            <div className="m-auto p-3" style={{maxWidth:"1000px"}} >
+                <iframe width="1000" height="600" src={"https://www.youtube.com/embed/" + props.match.params.id} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                 <div className="text-left">
                     <h2>{videoData.title}</h2>
                     <div className="text-dim">{stats.views} views</div>
