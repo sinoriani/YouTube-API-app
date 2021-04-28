@@ -60,7 +60,6 @@ exports.getAllChannels = asyncHandler(async (req, res, next) => {
     youtube.channels
     .list(options)
     .then(function (response)  {
-        // console.log(response);
         var channels = response.data.items;
         if (channels == undefined ) {
             res.status(400).send("no channels found")
@@ -91,8 +90,6 @@ exports.insertSubscription = asyncHandler(async (req, res, next) => {
     youtube.subscriptions
         .insert(options)
         .then(function (response) {
-            
-                console.log(response);
                 res.status(200).send("ok")
                 
             
@@ -105,20 +102,47 @@ exports.insertSubscription = asyncHandler(async (req, res, next) => {
 
 })
 
+exports.IsSubscribed = asyncHandler(async (req, res, next) => {
+    oauth2Client.credentials = queryToObj(req.query)
+    let options = {
+        auth: oauth2Client,
+        part: 'snippet',
+        forChannelId: req.query.forChannelId,
+        mine: true, 
+    }
+    /*let channelId = req.query.forChannelId;
+    console.log(channelId);
+    if(channelId){
+        options.forChannelId = channelId;
+    }*/
+    youtube.subscriptions.list(options)
+        .then(function (response) {
+            console.log(response.data);
+            if (response.data.items.length == 0)
+            {res.status(200).send("Notsubscribed");}
+            else {res.status(200).send("subscribed");}
+                      
+        })
+        .catch(function (err) {
+        console.log(err);
+        res.status(400).send("oops");  
+        })
+})
+
+    
+
 exports.mySubscriptions = asyncHandler(async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
     let options = {
         auth: oauth2Client,
         part: 'snippet', 
         mine: true ,
-        maxResults: 10,
+        maxResults: 10
     }
-
     
     youtube.subscriptions
     .list(options)
-    .then(function (response)  {
-        // console.log(response);
+    .then(function (response) {
         var channels = response.data.items;
         if (channels == undefined ) {
             res.status(400).send("no susbscriptions")
@@ -126,6 +150,6 @@ exports.mySubscriptions = asyncHandler(async (req, res, next) => {
             res.status(200).json(channels)
         }
         
-})
+    })
 
 })
