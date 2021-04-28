@@ -93,13 +93,8 @@ function CommentsPage(props) {
     }
 
     return (
-        <div className="App">
-            <div>
-                {/* <CommentForm onAdd={onAdd}  /> */}
-            </div>
-            <div className="d-flex justify-content-center flex-column m-auto " style={{maxWidth:"1000px"}}>
-                {comments}
-            </div>
+        <div className=" mr-auto ml-auto mt-3 " style={{maxWidth:"1000px"}}>
+            {comments}
         </div>
     );
 }
