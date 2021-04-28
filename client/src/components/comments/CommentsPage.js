@@ -39,7 +39,15 @@ function CommentsPage(props) {
             let list = []
 
             response.data.forEach(element => {
+                let toxicity;
+                if(element.filter){
+                    toxicity = Object.values(element.filter.predictions).reduce((a, b) => a + b, 0) / Object.values(element.filter.predictions).length
+                }else{
+                    toxicity = 0;
+                }
+                console.log(toxicity)
                 list.push( <Comment key={element.id} 
+                    toxicity={toxicity}
                     image={element.snippet.topLevelComment.snippet.authorProfileImageUrl} 
                     name={element.snippet.topLevelComment.snippet.authorDisplayName} 
                     comment={element.snippet.topLevelComment.snippet.textOriginal}  />)
@@ -89,7 +97,7 @@ function CommentsPage(props) {
             <div>
                 {/* <CommentForm onAdd={onAdd}  /> */}
             </div>
-            <div className="d-flex justify-content-center flex-column m-auto " style={{maxWidth:"1250px"}}>
+            <div className="d-flex justify-content-center flex-column m-auto " style={{maxWidth:"1000px"}}>
                 {comments}
             </div>
         </div>
