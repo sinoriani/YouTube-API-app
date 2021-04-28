@@ -60,7 +60,7 @@ exports.getAllChannels = asyncHandler(async (req, res, next) => {
     youtube.channels
     .list(options)
     .then(function (response)  {
-        console.log(response);
+        // console.log(response);
         var channels = response.data.items;
         if (channels == undefined ) {
             res.status(400).send("no channels found")
@@ -118,7 +118,7 @@ exports.mySubscriptions = asyncHandler(async (req, res, next) => {
     youtube.subscriptions
     .list(options)
     .then(function (response)  {
-        console.log(response);
+        // console.log(response);
         var channels = response.data.items;
         if (channels == undefined ) {
             res.status(400).send("no susbscriptions")

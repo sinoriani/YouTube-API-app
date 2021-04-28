@@ -13,11 +13,22 @@ body{
 
 .comment{
   background-color: #3a3a3a;
-  border-radius: 3px 15px 15px 15px;
+  border-radius: 5px 15px 15px 15px;
   padding: 10px 10px 10px 37px;
-  margin: 10px 5px;
+  margin: 10px 10px;
   position: relative;
   text-align: left;
+}
+
+.toxic{
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: rgb(231, 156, 15);
+  transform: rotate(10Deg);
+  padding: 3px 6px;
 }
 
 .commentProfileImg{
