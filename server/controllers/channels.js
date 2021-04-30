@@ -35,36 +35,29 @@ exports.getChannel = asyncHandler(async (req, res, next) => {
                 res.status(400).send("no channel found")
             } else {
                 res.status(200).json(channel)
+                console.log(channel);
             }
         })
 
 })
 
-// get all channels filtered by specific category
-exports.getAllChannels = asyncHandler(async (req, res, next) => {
+// get all videos filtered by channelId
+exports.getAllvideos = asyncHandler(async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
     let options = {
         auth: oauth2Client,
-        part: 'snippet,contentDetails,statistics',
+        part: 'snippet',
+        channelId: req.query.channelId,
+        maxResults: 6
     }
 
-    let category = req.query.category;
-    console.log(category);
-    if (category) {
-        options.categoryId = category;
-
-    } else {
-        return res.status(400).send({ 'msg': "You forgot to include the channel's category in the request's body" })
-    }
-
-    youtube.channels
-        .list(options)
+    youtube.search.list(options)
         .then(function (response) {
             var channels = response.data.items;
             if (channels == undefined) {
                 res.status(400).send("no channels found")
             } else {
-
+               
                 res.status(200).json(channels)
             }
 
@@ -72,6 +65,28 @@ exports.getAllChannels = asyncHandler(async (req, res, next) => {
 
 })
 
+exports.getVideoStats = asyncHandler(async (req, res, next) => {
+
+    oauth2Client.credentials = queryToObj(req.query)
+    let options = {
+        auth: oauth2Client,
+        part: 'statistics',
+        id : req.query.id
+    }
+ 
+    youtube.videos
+        .list(options)
+        .then( (response) => {
+            var videoStats = response.data.items[0].statistics.viewCount;
+            if (videoStats == undefined ) {
+                res.status(400).send("no video found")
+            } else {
+                res.status(200).send(videoStats);
+            }
+        })
+        .catch(err => console.error(err))
+
+})
 
 exports.insertSubscription = asyncHandler(async (req, res, next) => {
 

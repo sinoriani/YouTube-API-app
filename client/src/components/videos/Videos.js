@@ -34,12 +34,10 @@ const Videos = (props) => {
                     date : element.snippet.publishedAt,
                     id : element.id
                 }
-                let stats = {   
-                    views : element.statistics.viewCount
-                }
+  
                 let key = element.id
                 vids.push(
-                    <Video className="videoElement" onClick={props.onClick} key={key} channelData={channelData} videoData={videoData} stats={stats} />
+                    <Video className="videoElement" onClick={props.onClick} key={key} channelData={channelData} videoData={videoData}  />
                 )
             });
             setVideos(vids)
