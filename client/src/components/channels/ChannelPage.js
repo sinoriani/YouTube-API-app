@@ -11,6 +11,9 @@ function ChannelPage(props) {
     const [snippet, setSnippet] = useState({});
     const [stats, setstats] = useState({});
     const [thumbnails,setThumbnails] = useState({});
+    const [gotData,setGotData] = useState(false);
+    const [channelId, setChannelId] = useState(props.match.params.id);
+
     function nFormatter(num, digits) {
         var si = [
           { value: 1, symbol: "" },
@@ -32,10 +35,13 @@ function ChannelPage(props) {
       }
  
     useEffect(() => {
-        let token = getStoredToken();
-        getChannelData(token);
-        getVideoData(token);
-    },[])
+        if(props.match.params.id != channelId){
+            let token = getStoredToken();
+            getChannelData(token);
+            getVideoData(token);
+            setChannelId(props.match.params.id )
+        }
+    })
 
     const getChannelData = async (token) => {
         let url = "/channels/get";
@@ -46,7 +52,7 @@ function ChannelPage(props) {
                 id : props.match.params.id
             }
         }).then((response) => {
-            console.log(response.data[0])
+            // console.log(response.data[0])
             setSnippet(response.data[0].snippet);
             setstats(response.data[0].statistics);
             setThumbnails(response.data[0].snippet.thumbnails.default);
@@ -63,7 +69,7 @@ function ChannelPage(props) {
                 channelId : props.match.params.id
             }
         }).then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
             
             let vids = []
             response.data.forEach(element => {
@@ -79,11 +85,18 @@ function ChannelPage(props) {
                 }
                 let key = element.id.videoId
                 vids.push(
-                    <Video className="videoElement" onClick={props.onClick} key={key} channelData={channelData} videoData={videoData} />
+                    <Video className="videoElement" key={key} channelData={channelData} videoData={videoData} />
                 )
             });
             setVideos(vids)
         });
+    }
+
+    if(!gotData){
+        let token = getStoredToken();
+        getChannelData(token);
+        getVideoData(token);
+        setGotData(true)
     }
 
     return (
