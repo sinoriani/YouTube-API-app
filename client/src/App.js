@@ -48,7 +48,7 @@ function App() {
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/login" component={Login} />
-              <Route path="/channel" component={ChannelPage} />
+              <Route path="/channel/:id" component={ChannelPage} />
               <Route path="/subscription" component={SubscriptionPage} />
               <Route path="/video/:id" component={VideoPlayer} />
             </Switch>
