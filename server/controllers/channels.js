@@ -47,6 +47,7 @@ exports.getAllvideos = asyncHandler(async (req, res, next) => {
     let options = {
         auth: oauth2Client,
         part: 'snippet',
+        type:"video",
         channelId: req.query.channelId,
         maxResults: 6
     }

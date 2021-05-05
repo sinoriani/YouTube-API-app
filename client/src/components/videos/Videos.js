@@ -13,34 +13,40 @@ const Videos = (props) => {
     }, [])
 
     const getVideoData = async (token) => {
-        let url = "/videos/get";
+        let url = "/videos/getRelatedVideos";
         console.log(url)
         axios.get(url,{
             params: {
                 ...token,
-                id : 'g1eKFoCf0VE,ewRw996uevM,L72fhGm1tfE,2DSjif0MNiA'
+                // id : 'g1eKFoCf0VE,ewRw996uevM,L72fhGm1tfE,2DSjif0MNiA',
+                // videoCategoryId: "10",
+                relatedToVideoId: "g1eKFoCf0VE"
             }
         }).then((response) => {
             console.log(response.data)
             let vids = []
             response.data.forEach(element => {
-                let channelData = {
-                    "id" : element.snippet.channelId,
-                    "title" : element.snippet.channelTitle,
+                if(element.snippet){
+                    let channelData = {
+                        "id" : element.snippet.channelId,
+                        "title" : element.snippet.channelTitle,
+                    }
+                    let videoData = {
+                        title : element.snippet.title,
+                        thumbnail : element.snippet.thumbnails.medium,
+                        date : element.snippet.publishedAt,
+                        id : typeof element.id == "object" ? element.id.videoId : element.id
+                    }
+    
+                    let key = typeof element.id == "object" ? element.id.videoId : element.id
+                    vids.push(
+                        <Video className="videoElement" onClick={props.onClick} key={key} channelData={channelData} videoData={videoData}  />
+                    )
                 }
-                let videoData = {
-                    title : element.snippet.title,
-                    thumbnail : element.snippet.thumbnails.medium,
-                    date : element.snippet.publishedAt,
-                    id : element.id
-                }
-  
-                let key = element.id
-                vids.push(
-                    <Video className="videoElement" onClick={props.onClick} key={key} channelData={channelData} videoData={videoData}  />
-                )
             });
             setVideos(vids)
+        }).catch((err)=>{
+            console.log(err);
         });
     }
 
@@ -48,7 +54,7 @@ const Videos = (props) => {
 
     return (
         <div className="App">
-            <div className="d-flex flex-wrap m-3">
+            <div className="d-flex justify-content-center flex-wrap m-3">
                 {videos}
             </div>
         </div>

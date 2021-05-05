@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { getStoredToken } from '../../utils/verifyToken';
 import CommentsPage from '../comments/CommentsPage';
-import { Button } from "../elements/SubscriptionButton";
 import {Link} from "react-router-dom";
 
 
@@ -32,20 +31,24 @@ const VideoPlayer = (props) => {
             }
         }).then((response) => {
             let element = response.data[0]
-            let _channelData = {
-                "id": element.snippet.channelId,
-                "title": element.snippet.channelTitle
-            }
+            if(element){
+                let _channelData = {
+                    "id": element.snippet.channelId,
+                    "title": element.snippet.channelTitle
+                }
+    
+                let _videoData = {
+                    title: element.snippet.title,
+                    thumbnail: element.snippet.thumbnails.medium,
+                    date: element.snippet.publishedAt,
+                    id: element.id
+                }
+                console.log(element)
+                setChannelData(_channelData);
+                setVideoData(_videoData);
+                IsSubscribed(token, element.snippet.channelId);
 
-            let _videoData = {
-                title: element.snippet.title,
-                thumbnail: element.snippet.thumbnails.medium,
-                date: element.snippet.publishedAt,
-                id: element.id
             }
-            setChannelData(_channelData);
-            setVideoData(_videoData);
-            IsSubscribed(token, element.snippet.channelId);
        
         });
     }
