@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { getStoredToken } from '../../utils/verifyToken';
 import CommentsPage from '../comments/CommentsPage';
-import { Button } from "../elements/SubscriptionButton";
+import {Link} from "react-router-dom";
 
 
 const VideoPlayer = (props) => {
@@ -10,17 +10,19 @@ const VideoPlayer = (props) => {
     const [videoData, setVideoData] = useState({})
     const [stats, setStats] = useState({})
     const [subs, setSubs] = useState("");
-    const [isSubbed, setIsSubbed] = useState(false);
+    
 
 
 
     useEffect(() => {
         let token = getStoredToken();
         getVideoData(token);
+        getVideostats(token);
 
     }, [])
 
     const getVideoData = async (token) => {
+        
         let url = "/videos/get";
         axios.get(url, {
             params: {
@@ -29,26 +31,46 @@ const VideoPlayer = (props) => {
             }
         }).then((response) => {
             let element = response.data[0]
-            let _channelData = {
-                "id": element.snippet.channelId,
-                "title": element.snippet.channelTitle
-            }
+            if(element){
+                let _channelData = {
+                    "id": element.snippet.channelId,
+                    "title": element.snippet.channelTitle
+                }
+    
+                let _videoData = {
+                    title: element.snippet.title,
+                    thumbnail: element.snippet.thumbnails.medium,
+                    date: element.snippet.publishedAt,
+                    id: element.id
+                }
+                console.log(element)
+                setChannelData(_channelData);
+                setVideoData(_videoData);
+                IsSubscribed(token, element.snippet.channelId);
 
-            let _videoData = {
-                title: element.snippet.title,
-                thumbnail: element.snippet.thumbnails.medium,
-                date: element.snippet.publishedAt,
-                id: element.id
             }
-            let _stats = {
-                views: element.statistics.viewCount
-            }
-            setChannelData(_channelData);
-            setVideoData(_videoData);
-            setStats(_stats);
-            IsSubscribed(token, element.snippet.channelId);
+       
         });
     }
+
+    const getVideostats = async (token) => {
+        let url = "/channels/getvideostats";
+        axios.get(url,{
+            params: {
+                ...token,
+                id : props.match.params.id
+            }
+        }).then((response) => {
+
+                let _stats = {   
+                    views : response.data
+                }
+                setStats(_stats);
+                console.log(stats.views);
+            });
+
+        }
+
     function IsSubscribed(token, channelId) {
         let url = "/channels/IsSubscribed";
         console.log(channelId);
@@ -60,6 +82,7 @@ const VideoPlayer = (props) => {
         }).then((response) => {
             console.log(response.data);
             setSubs(response.data.isSubbed);
+            
         });
     }
     function NotSubscribed(props) {
@@ -77,7 +100,7 @@ const VideoPlayer = (props) => {
             onClick={() => { console.log("You Clicked on Me!"); }}
             type="div"
             className="p-2 text-danger">
-            SUBSCRIBED <i class="fas  fa-check-circle"></i>
+            SUBSCRIBED <i className="fas  fa-check-circle"></i>
         </div>;
     }
     function SubscriptionButton() {
@@ -121,11 +144,11 @@ const VideoPlayer = (props) => {
                     <div className="text-dim">{stats.views} views</div>
                     <div className="border-top p-1 mt-1 d-flex justify-content-between">
                         <div className="pt-1 ">
-                            <span className="text-dim ">By</span> {channelData.title}
+                            <span className="text-dim ">By</span><Link to={"/Channel/" + channelData.id} style={{color:"#dfdfdf"}}><span> {channelData.title}</span></Link>
                         </div>
                         <SubscriptionButton />
                     </div>
-
+                    
                 </div>
             </div>
 
