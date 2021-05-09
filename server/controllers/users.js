@@ -24,6 +24,7 @@ function getDbCreds() {
 }
 const mysql_credentials = getDbCreds();
 
+exports.mysql_credentials = mysql_credentials;
 
 exports.getInfo = asyncHandler(async (req, res, next) => {
   oauth2Client.credentials = queryToObj(req.query)
@@ -103,4 +104,48 @@ exports.updatePoints = async (req, res, next) => {
   res.status(200).json({
     message: "points updated !"
   })
+}
+
+
+
+exports.addWatchHistory = async (req, res, next) => {
+  oauth2Client.credentials = queryToObj(req.query)
+  
+  //connect database
+  var con = mysql.createConnection(mysql_credentials);
+
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+  });
+
+  var oauth2 = google.oauth2({
+    auth: oauth2Client,
+    version: 'v2'
+  });
+  oauth2.userinfo.get(
+    function (err, result) {
+      if (err) {
+        console.log("err ",err)
+        res.send(err)
+      } else {
+        let user_id = result.data.id
+        let video_id = req.query.video_id
+
+        //prepare sql query 
+        var sql = `INSERT INTO watch_history(video_id, user_id) VALUES('${video_id}','${user_id}');`
+
+        //execute sql query 
+        con.query(sql, ((error, result) => {
+          if (error) {
+            res.send("failed to update history")
+            console.log("failed to update history",error)
+          }else{
+            console.log("history updated!")
+            res.send("history updated!")
+          }
+        }))
+        
+      }
+    });
 }

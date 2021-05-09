@@ -18,8 +18,22 @@ const VideoPlayer = (props) => {
         let token = getStoredToken();
         getVideoData(token);
         getVideostats(token);
+        addWatchHistory(token);
 
     }, [])
+
+    const addWatchHistory = async (token) => {
+        
+        let url = "/users/addWatchHistory";
+        axios.get(url, {
+            params: {
+                ...token,
+                video_id: props.match.params.id
+            }
+        }).then((response) => {
+            console.log(response);
+        });
+    }
 
     const getVideoData = async (token) => {
         
@@ -85,6 +99,7 @@ const VideoPlayer = (props) => {
             
         });
     }
+
     function NotSubscribed(props) {
         let token = getStoredToken();
         return <button
@@ -103,6 +118,7 @@ const VideoPlayer = (props) => {
             SUBSCRIBED <i className="fas  fa-check-circle"></i>
         </div>;
     }
+
     function SubscriptionButton() {
         if (subs) {
             return <Subscribed />;
@@ -135,6 +151,8 @@ const VideoPlayer = (props) => {
                 console.log(err)
             });
     }
+
+
     return (
         <div className="m-1 " >
             <div className="m-auto p-3" style={{ maxWidth: "1000px" }} >

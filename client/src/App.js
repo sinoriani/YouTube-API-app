@@ -41,7 +41,9 @@ function App() {
       <div className="App">
         <Navbar userInfo={userInfo} profilePic={userInfo.picture} />
         <div className="row m-0 p-0">
-          <div className="side col-lg-2 p-0"><SidebarPage key="sidebar" /></div>
+          <div className="side col-lg-2 p-0">
+            <SidebarPage key="sidebar" />
+          </div>
           <div className="content pt-2 col-lg-10 p-0" >
             <div>Hello {userInfo.name}</div>
 
