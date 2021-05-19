@@ -80,6 +80,115 @@ exports.getVideoById = asyncHandler(async (req, res, next) => {
         .catch(err => console.error(err))
 });
 
+exports.LikeVideo = asyncHandler(async (req, res, next) => {
+
+    oauth2Client.credentials = queryToObj(req.query)
+    /*return gapi.client.youtube.videos.rate({
+      "id": "Ks-_Mh1QhMc",
+      "rating": "like"
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+              },
+              function(err) { console.error("Execute error", err); });
+              */
+    let options = {
+        auth: oauth2Client,
+        id: '779jI4Rwl5c',
+        rating: 'like'
+    }
+    /*let id = req.query.id
+    if (id){
+        options.id=id
+    }
+    else{
+        return res.status(400).send({'msg':"You forgot to include the id in the request's body"})
+    }
+    */
+    youtube.videos
+        .rate(options)
+        .then(function (response) {  
+                console.log(response);
+                res.status(200).send("donee")
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.status(400).send("error");  
+        })
+
+
+});
+
+exports.DislikeVideo = asyncHandler(async (req, res, next) => {
+
+    oauth2Client.credentials = queryToObj(req.query)
+    let options = {
+        auth: oauth2Client,
+        id: '779jI4Rwl5c',
+        rating: 'dislike'
+    }
+    /*let id = req.query.id
+    if (id){
+        options.id=id
+    }
+    else{
+        return res.status(400).send({'msg':"You forgot to include the id in the request's body"})
+    }
+    */
+    youtube.videos
+        .rate(options)
+        .then(function (response) {  
+                console.log(response);
+                res.status(200).send("donee")
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.status(400).send("error");  
+        })
+
+
+});
+
+exports.getVideoRating = asyncHandler(async (req, res, next) => {
+    oauth2Client.credentials = queryToObj(req.query)
+    let options = {
+        auth: oauth2Client,
+        id: '779jI4Rwl5c'
+        ,
+    }
+    /*let id = req.query.id
+
+    if (id) {
+        options.id = id
+    }
+    else {
+        return res.status(400).send({ 'msg': "You forgot to include the Id" })
+    }*/
+    
+
+    youtube.videos.getRating(options)
+        .then(response => {
+            var rating = response.data.items;
+            if (rating == undefined) {
+                res.status(400).send("no rating found")
+            } else {
+                console.log(rating);
+               
+                if (rating[0].rating== "like")
+                { res.status(200).send({"isRated":"like"}); 
+                    console.log(rating[0].rating)}
+                else if (rating[0].rating== "dislike")
+                { res.status(200).send({"isRated":"dislike"}); }
+                else (response.data== []) 
+                { res.status(200).send({"isRated":"notRated"}); }
+
+            }
+            
+        })
+        .catch(err => console.error(err))
+});
+
 
 exports.getVideosByCategory = asyncHandler(async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
@@ -163,14 +272,6 @@ const mysql_credentials = getDbCreds();
 
 exports.getRecommendedVideos = async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
-    let options = {
-        auth: oauth2Client,
-        part: 'snippet',
-        relatedToVideoId: "YTvJSMOUlbI",
-        type: "video",
-        maxResults: 5
-    }
-
     //connect database
     var con = mysql.createConnection(mysql_credentials);
     var oauth2 = google.oauth2({

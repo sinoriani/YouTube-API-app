@@ -114,7 +114,7 @@ function ChannelPage(props) {
         </ul>
         </div>
 
-        <div className="d-flex flex-wrap m-3">
+        <div className="d-flex flex-wrap justify-content-center m-3">
                 {videos}
             </div>
         </div>
