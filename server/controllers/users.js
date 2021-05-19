@@ -149,3 +149,30 @@ exports.addWatchHistory = async (req, res, next) => {
       }
     });
 }
+
+exports.getUsers = async (req, res, next) => {
+  oauth2Client.credentials = queryToObj(req.query)
+  
+  //connect database
+  var con = mysql.createConnection(mysql_credentials);
+
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+  });
+
+        //prepare sql query 
+        var sql = `SELECT picture,name from user ORDER BY points desc LIMIT 3;`
+
+        //execute sql query 
+        con.query(sql, ((error, result) => {
+          if (error) {
+            res.send("failed")
+            console.log("failed!!!!!",error)
+          }else{
+            console.log(result)
+            res.status(200).send(result)
+          }
+        }))
+        
+}
