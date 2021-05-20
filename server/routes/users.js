@@ -10,4 +10,5 @@ usersRouter.route('/updatePoints').patch(updatePoints)
 usersRouter.route('/addWatchHistory').get(addWatchHistory)
 usersRouter.route('/getUsers').get(getUsers)
 
+
 exports.usersRouter = usersRouter;

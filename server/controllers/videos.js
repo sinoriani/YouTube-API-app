@@ -329,3 +329,95 @@ exports.getRecommendedVideos = async (req, res, next) => {
             }
         });
 }
+
+exports.getTrending = async (req, res, next) => {
+    oauth2Client.credentials = queryToObj(req.query)
+    //connect database
+    var con = mysql.createConnection(mysql_credentials);
+    var oauth2 = google.oauth2({
+        auth: oauth2Client,
+        version: 'v2'
+    });
+    oauth2.userinfo.get(
+        function (err, result) {
+            if (err) {
+                console.log("err ", err)
+                return res.send(err)
+            } else {
+                con.connect(function (err) {
+                    if (err) {
+                        console.log("an error occured while connecting to db", err)
+                        throw err
+                    };
+                    console.log("Connected!&!");
+                });
+
+                let user_id = result.data.id
+                console.log('aaa', user_id)
+                //prepare sql query 
+                var sql = `SELECT countryCode FROM user WHERE id = '${user_id}';`
+
+
+                //execute sql query 
+                con.query(sql, ((error, result) => {
+                    if (error) {
+                        console.log("an error occured while getting countryCode from db", error)
+                        return res.send("an error occured while getting countryCode from db")
+                    } else {
+                        let options = {
+                            auth: oauth2Client,
+                            part: 'snippet',
+                            chart: 'mostPopular',
+                            regionCode: result[0].countryCode,
+                            maxResults: 15
+                        }
+                         console.log(options.regionCode);
+                        youtube.videos
+                            .list(options)
+                            .then(response => {
+                                var videos = response.data.items;
+                                if (videos == undefined) {
+                                    res.status(400).send("no videos found")
+                                } else {
+                                    res.status(200).send(videos)
+                                }
+                            })
+                            .catch(err => console.error(err))
+                    }
+
+                }))
+
+            }
+        });
+
+
+    
+}
+      
+
+
+
+exports.testrst = async (req, res, next) => {
+    let code="";
+    var con = mysql.createConnection(mysql_credentials);
+    con.connect(function (err) {
+        if (err) {
+            console.log("an error occured while connecting to db", err)
+            throw err
+        };
+        console.log("Connected!&!");
+    });
+    var sql = `SELECT countryCode FROM user WHERE given_name = "oueslati";`
+    con.query(sql, ((error, result) => {
+        if (error) {
+            console.log("an error occured while getting countryCode from db", error)
+            return res.send("an error occured while getting countryCode from db")
+        } else {
+            code=result[0].countryCode;
+            res.status(200).send(code)
+
+        }
+
+    }))
+
+}

@@ -14,7 +14,8 @@ import ChannelPage from "./components/channels/ChannelPage";
 import { getStoredToken } from './utils/verifyToken';
 import SubscriptionPage from './components/channels/subscription';
 import VideoPlayer from './components/videos/VideoPlayer';
-import SidebarPage from './components/elements/Sidebar'
+import SidebarPage from './components/elements/Sidebar';
+import Trending from './components/videos/Trending';
 
 
 
@@ -53,6 +54,7 @@ function App() {
               <Route path="/channel/:id" component={ChannelPage} />
               <Route path="/subscription" component={SubscriptionPage} />
               <Route path="/video/:id" component={VideoPlayer} />
+              <Route path="/Trending" component={Trending} />
             </Switch>
           </div>
         </div>

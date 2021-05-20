@@ -7,6 +7,7 @@ const { queryToObj } = require("../utils/queryCredentials")
 const mysql = require('mysql')
 var fs = require('fs');
 var readline = require('readline');
+var axios = require('axios');
 
 function getDbCreds() {
   const data = fs.readFileSync('mysql_credentials.json', (err, content) => {
@@ -29,9 +30,16 @@ exports.mysql_credentials = mysql_credentials;
 exports.getInfo = asyncHandler(async (req, res, next) => {
   oauth2Client.credentials = queryToObj(req.query)
   
+  let code="";
+//get countryCode
+  axios.get('http://ip-api.com/json/?fields=countryCode')
+.then(function(response) {
+  console.log(response.data);
+  code=response.data.countryCode;
+});
   //connect database
   var con = mysql.createConnection(mysql_credentials);
-
+  
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
@@ -48,9 +56,10 @@ exports.getInfo = asyncHandler(async (req, res, next) => {
         res.send(err)
       } else {
         let user = result.data
+        console.log(user);
         //prepare sql query 
-        var sql = `INSERT INTO user(id,name,given_name,family_name,picture,locale)  
-          VALUES ("${user.id}","${user.name}", "${user.given_name}","${user.family_name}","${user.picture}","${user.locale}");`
+        var sql = `INSERT INTO user(id,name,given_name,family_name,picture,locale,countryCode)  
+          VALUES ("${user.id}","${user.name}", "${user.given_name}","${user.family_name}","${user.picture}","${user.locale}","${code}");`
         //execute sql query 
         con.query(sql, ((error, result) => {
           if (error) {
@@ -176,3 +185,11 @@ exports.getUsers = async (req, res, next) => {
         }))
         
 }
+
+exports.getRegionCode = async (req, res, next) => {
+
+}
+
+
+
+

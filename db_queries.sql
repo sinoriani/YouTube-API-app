@@ -15,3 +15,5 @@ create table user(
     locale varchar(10), 
     points integer default 0
 );
+
+ALTER TABLE user ADD countryCode VARCHAR(5) NULL;
