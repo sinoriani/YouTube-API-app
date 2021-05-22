@@ -11,8 +11,6 @@ const VideoPlayer = (props) => {
     const [stats, setStats] = useState({})
     const [subs, setSubs] = useState("");
     const [isRated, setisRated] = useState("");
-    const [like, setLike] = useState("");
-    const [dislike, setDislike] = useState("");
 
 
 
@@ -22,8 +20,11 @@ const VideoPlayer = (props) => {
         getVideostats(token);
         addWatchHistory(token);
         getRating(token);
+        addLikesHistory(token);
 
     }, [])
+
+    
 
     const addWatchHistory = async (token) => {
         
@@ -64,9 +65,6 @@ const VideoPlayer = (props) => {
                 setChannelData(_channelData);
                 setVideoData(_videoData);
                 IsSubscribed(token, element.snippet.channelId);
-                //liked
-                //disliked
-
             }
        
         });
@@ -96,9 +94,10 @@ const VideoPlayer = (props) => {
         axios.get(url,{
             params: {
                 ...token,
+                id: props.match.params.id
             }
         }).then((response) => {
-
+                console.log(props.match.params.id);
                 let rating = response.data;
                 console.log(response.data.isRated);
                 setisRated(response.data.isRated);
@@ -115,13 +114,13 @@ const VideoPlayer = (props) => {
     }
     const Like=(props)=> {
         let token = getStoredToken(); 
-        return <div><button
+        return <div><button className=" btn btn-md p-2 rate"
         onClick={() => { likeVideo(token) }}>
-            LIKE
+            LIKE   <i class="fas fa-thumbs-up"></i>
         </button>
-        <button
+        <button className=" btn btn-md p-2 rate" 
         onClick={() => {dislikeVideo(token) }}>
-            DISLIKE
+            DISLIKE   <i class="fas fa-thumbs-down"></i>
         </button></div>;
     }
     const Disliked=(props)=> {
@@ -155,7 +154,7 @@ const VideoPlayer = (props) => {
             {
                 params: {
                     ...token,
-
+                    id: props.match.params.id
                 }
             }).then(() => {
                setisRated("like");
@@ -176,13 +175,25 @@ const VideoPlayer = (props) => {
             {
                 params: {
                     ...token,
-
+                    id: props.match.params.id
                 }
             }).then(() => {
                setisRated("dislike");
             }).catch((err) => {
                 console.log(err)
             });
+    }
+    const addLikesHistory = async (token) => {
+        if (isRated=="like") {
+        let url = "/users/addLikesHistory";
+        axios.get(url, {
+            params: {
+                ...token,
+                video_id: props.match.params.id
+            }
+        }).then((response) => {
+            console.log(response);
+        })}
     }
 
     function IsSubscribed(token, channelId) {
@@ -266,7 +277,7 @@ const VideoPlayer = (props) => {
                         </div>
                         
                         <SubscriptionButton />
-                        <Rate/>
+                        <Rate video_id={props.match.params.id} />
                     </div>
                     
                 </div>

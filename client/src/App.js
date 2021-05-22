@@ -16,6 +16,7 @@ import SubscriptionPage from './components/channels/subscription';
 import VideoPlayer from './components/videos/VideoPlayer';
 import SidebarPage from './components/elements/Sidebar';
 import Trending from './components/videos/Trending';
+import Liked from './components/videos/Liked';
 
 
 
@@ -55,6 +56,7 @@ function App() {
               <Route path="/subscription" component={SubscriptionPage} />
               <Route path="/video/:id" component={VideoPlayer} />
               <Route path="/Trending" component={Trending} />
+              <Route path="/Liked" component={Liked} />
             </Switch>
           </div>
         </div>

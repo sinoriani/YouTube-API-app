@@ -33,6 +33,9 @@ render() {
             <MDBNavItem >
               <MDBNavLink to="/Trending">Trending</MDBNavLink>
             </MDBNavItem>
+            <MDBNavItem >
+              <MDBNavLink to="/Liked">Recommended</MDBNavLink>
+            </MDBNavItem>
             {/* <MDBNavItem>
                   <MDBNavLink to="/channel">Channel</MDBNavLink>
                 </MDBNavItem>

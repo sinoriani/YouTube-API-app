@@ -7,7 +7,7 @@ import Video from "./Video";
 
 
 
-const Trending = (props) => {
+const Liked = (props) => {
     const [videos, setVideos] = useState(["Loading.."])
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const Trending = (props) => {
    
 
     const getVideoData = async (token) => {
-        let url = "/videos/getTrending";
+        let url = "/videos/getLiked";
         axios.get(url, {
                 params: {
                     ...token,
@@ -25,7 +25,9 @@ const Trending = (props) => {
             }).then((response) => {
                 var vids = []
                 console.log(response.data);
+
                 response.data.forEach(element => {
+                   
                     if (element.snippet) {
                         let channelData = {
                             "id": element.snippet.channelId,
@@ -37,6 +39,7 @@ const Trending = (props) => {
                             date: element.snippet.publishedAt,
                             id: typeof element.id == "object" ? element.id.videoId : element.id
                         }
+                        
 
                         let key = typeof element.id == "object" ? element.id.videoId : element.id
                         vids.push(
@@ -44,6 +47,7 @@ const Trending = (props) => {
                         )
                     }
                 });
+                console.log(vids)
                 setVideos(vids)
 
 
@@ -58,7 +62,7 @@ const Trending = (props) => {
 
     return (
         <div className="App">
-            <h1>Trending</h1>
+            <h1>Liked</h1>
             <div className="d-flex justify-content-center flex-wrap m-3">
                 {videos}
             </div>            
@@ -66,4 +70,4 @@ const Trending = (props) => {
     );
 }
 
-export default Trending;
+export default Liked;

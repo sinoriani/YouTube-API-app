@@ -190,6 +190,46 @@ exports.getRegionCode = async (req, res, next) => {
 
 }
 
+exports.addLikeHistory = async (req, res, next) => {
+  oauth2Client.credentials = queryToObj(req.query)
+  
+  var con = mysql.createConnection(mysql_credentials);
+
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+  });
+
+  var oauth2 = google.oauth2({
+    auth: oauth2Client,
+    version: 'v2'
+  });
+  oauth2.userinfo.get(
+    function (err, result) {
+      if (err) {
+        console.log("err ",err)
+        res.send(err)
+      } else {
+        let user_id = result.data.id
+        let video_id = req.query.video_id
+
+        var sql = `INSERT INTO likes_history(video_id, user_id) VALUES('${video_id}','${user_id}');`
+
+        
+        con.query(sql, ((error, result) => {
+          if (error) {
+            res.send("failed to update history")
+            console.log("failed to update history",error)
+          }else{
+            console.log("history updated!")
+            res.send("history updated!")
+          }
+        }))
+        
+      }
+    });
+}
+
 
 
 

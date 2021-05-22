@@ -83,29 +83,12 @@ exports.getVideoById = asyncHandler(async (req, res, next) => {
 exports.LikeVideo = asyncHandler(async (req, res, next) => {
 
     oauth2Client.credentials = queryToObj(req.query)
-    /*return gapi.client.youtube.videos.rate({
-      "id": "Ks-_Mh1QhMc",
-      "rating": "like"
-    })
-        .then(function(response) {
-                // Handle the results here (response.result has the parsed body).
-                console.log("Response", response);
-              },
-              function(err) { console.error("Execute error", err); });
-              */
     let options = {
         auth: oauth2Client,
-        id: '779jI4Rwl5c',
+        id: req.query.id,
         rating: 'like'
     }
-    /*let id = req.query.id
-    if (id){
-        options.id=id
-    }
-    else{
-        return res.status(400).send({'msg':"You forgot to include the id in the request's body"})
-    }
-    */
+    
     youtube.videos
         .rate(options)
         .then(function (response) {  
@@ -125,17 +108,9 @@ exports.DislikeVideo = asyncHandler(async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
     let options = {
         auth: oauth2Client,
-        id: '779jI4Rwl5c',
+        id: req.query.id,
         rating: 'dislike'
     }
-    /*let id = req.query.id
-    if (id){
-        options.id=id
-    }
-    else{
-        return res.status(400).send({'msg':"You forgot to include the id in the request's body"})
-    }
-    */
     youtube.videos
         .rate(options)
         .then(function (response) {  
@@ -154,19 +129,9 @@ exports.getVideoRating = asyncHandler(async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
     let options = {
         auth: oauth2Client,
-        id: '779jI4Rwl5c'
-        ,
+        id: req.query.id
     }
-    /*let id = req.query.id
-
-    if (id) {
-        options.id = id
-    }
-    else {
-        return res.status(400).send({ 'msg': "You forgot to include the Id" })
-    }*/
-    
-
+   
     youtube.videos.getRating(options)
         .then(response => {
             var rating = response.data.items;
@@ -322,6 +287,63 @@ exports.getRecommendedVideos = async (req, res, next) => {
                         //         }
                         //     })
 
+                    }
+
+                }))
+
+            }
+        });
+}
+exports.getLikedVideos = async (req, res, next) => { 
+    oauth2Client.credentials = queryToObj(req.query)
+    //connect database
+    var con = mysql.createConnection(mysql_credentials);
+    var oauth2 = google.oauth2({
+        auth: oauth2Client,
+        version: 'v2'
+    });
+    oauth2.userinfo.get(
+        function (err, result) {
+            if (err) {
+                console.log("err ", err)
+                return res.send(err)
+            } else {
+                con.connect(function (err) {
+                    if (err) {
+                        console.log("an error occured while connecting to db", err)
+                        throw err
+                    };
+                    console.log("Connected!&!");
+                });
+
+                let user_id = result.data.id
+                var sql = `SELECT video_id FROM likes_history WHERE user_id = '${user_id}' ORDER BY timestamp_ desc LIMIT 5;`
+
+                con.query(sql, ((error, result) => {
+                    if (error) {
+                        console.log("an error occured while getting recommended videos from db", error)
+                        return res.send("an error occured while getting recommended videos from db")
+                    } else {
+                        console.log(result)
+                        let options = {
+                            auth: oauth2Client,
+                            part: 'snippet',
+                            chart: 'mostPopular',
+                            regionCode: result[0].countryCode,
+                            maxResults: 15
+                        }
+                         console.log(options.regionCode);
+                        youtube.videos
+                            .list(options)
+                            .then(response => {
+                                var videos = response.data.items;
+                                if (videos == undefined) {
+                                    res.status(400).send("no videos found")
+                                } else {
+                                    res.status(200).send(videos)
+                                }
+                            })
+                            .catch(err => console.error(err))
                     }
 
                 }))
