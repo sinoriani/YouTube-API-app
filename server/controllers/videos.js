@@ -88,16 +88,16 @@ exports.LikeVideo = asyncHandler(async (req, res, next) => {
         id: req.query.id,
         rating: 'like'
     }
-    
+
     youtube.videos
         .rate(options)
-        .then(function (response) {  
-                console.log(response);
-                res.status(200).send("donee")
+        .then(function (response) {
+            console.log(response);
+            res.status(200).send("donee")
         })
         .catch(function (err) {
             console.log(err);
-            res.status(400).send("error");  
+            res.status(400).send("error");
         })
 
 
@@ -113,13 +113,13 @@ exports.DislikeVideo = asyncHandler(async (req, res, next) => {
     }
     youtube.videos
         .rate(options)
-        .then(function (response) {  
-                console.log(response);
-                res.status(200).send("donee")
+        .then(function (response) {
+            console.log(response);
+            res.status(200).send("donee")
         })
         .catch(function (err) {
             console.log(err);
-            res.status(400).send("error");  
+            res.status(400).send("error");
         })
 
 
@@ -131,7 +131,7 @@ exports.getVideoRating = asyncHandler(async (req, res, next) => {
         auth: oauth2Client,
         id: req.query.id
     }
-   
+
     youtube.videos.getRating(options)
         .then(response => {
             var rating = response.data.items;
@@ -139,17 +139,22 @@ exports.getVideoRating = asyncHandler(async (req, res, next) => {
                 res.status(400).send("no rating found")
             } else {
                 console.log(rating);
-               
-                if (rating[0].rating== "like")
-                { res.status(200).send({"isRated":"like"}); 
-                    console.log(rating[0].rating)}
-                else if (rating[0].rating== "dislike")
-                { res.status(200).send({"isRated":"dislike"}); }
-                else (response.data== []) 
-                { res.status(200).send({"isRated":"notRated"}); }
+
+                if (rating[0].rating == "like") {
+                    res.status(200).send({ "isRated": "like" });
+                    console.log(rating[0].rating)
+                }
+                else if (rating[0].rating == "dislike") 
+                { 
+                    res.status(200).send({ "isRated": "dislike" }); 
+                }
+                else if(response.data == [])
+                { 
+                    res.status(200).send({ "isRated": "notRated" }); 
+                }
 
             }
-            
+
         })
         .catch(err => console.error(err))
 });
@@ -294,7 +299,7 @@ exports.getRecommendedVideos = async (req, res, next) => {
             }
         });
 }
-exports.getLikedVideos = async (req, res, next) => { 
+exports.getLikedVideos = async (req, res, next) => {
     oauth2Client.credentials = queryToObj(req.query)
     //connect database
     var con = mysql.createConnection(mysql_credentials);
@@ -317,33 +322,40 @@ exports.getLikedVideos = async (req, res, next) => {
                 });
 
                 let user_id = result.data.id
-                var sql = `SELECT video_id FROM likes_history WHERE user_id = '${user_id}' ORDER BY timestamp_ desc LIMIT 5;`
+                var sql = `SELECT video_id FROM likes_history WHERE user_id = '${user_id}' ORDER BY timestamp_ desc LIMIT 1;`
 
                 con.query(sql, ((error, result) => {
                     if (error) {
                         console.log("an error occured while getting recommended videos from db", error)
                         return res.send("an error occured while getting recommended videos from db")
                     } else {
-                        console.log(result)
-                        let options = {
-                            auth: oauth2Client,
-                            part: 'snippet',
-                            chart: 'mostPopular',
-                            regionCode: result[0].countryCode,
-                            maxResults: 15
+                        console.log("123", result, result.length)
+                        if (result.length == 0) {
+                            console.log("no lieks yet")
+                            return res.status(400).send("no likes yet")
+                        } else {
+                            res.status(200).send(result)
+                            // let options = {
+                            //     auth: oauth2Client,
+                            //     part: 'snippet',
+                            //     chart: 'mostPopular',
+                            //     regionCode: result[0].countryCode,
+                            //     maxResults: 15
+                            // }
+                            // // console.log(options.regionCode);
+                            // youtube.videos
+                            //     .list(options)
+                            //     .then(response => {
+                            //         var videos = response.data.items;
+                            //         if (videos == undefined) {
+                            //             res.status(400).send("no videos found")
+                            //         } else {
+                            //             res.status(200).send(videos)
+                            //         }
+                            //     })
+                            //     .catch(err => console.error(err))
+
                         }
-                         console.log(options.regionCode);
-                        youtube.videos
-                            .list(options)
-                            .then(response => {
-                                var videos = response.data.items;
-                                if (videos == undefined) {
-                                    res.status(400).send("no videos found")
-                                } else {
-                                    res.status(200).send(videos)
-                                }
-                            })
-                            .catch(err => console.error(err))
                     }
 
                 }))
@@ -393,7 +405,7 @@ exports.getTrending = async (req, res, next) => {
                             regionCode: result[0].countryCode,
                             maxResults: 15
                         }
-                         console.log(options.regionCode);
+                        console.log(options.regionCode);
                         youtube.videos
                             .list(options)
                             .then(response => {
@@ -413,14 +425,14 @@ exports.getTrending = async (req, res, next) => {
         });
 
 
-    
+
 }
-      
+
 
 
 
 exports.testrst = async (req, res, next) => {
-    let code="";
+    let code = "";
     var con = mysql.createConnection(mysql_credentials);
     con.connect(function (err) {
         if (err) {
@@ -435,7 +447,7 @@ exports.testrst = async (req, res, next) => {
             console.log("an error occured while getting countryCode from db", error)
             return res.send("an error occured while getting countryCode from db")
         } else {
-            code=result[0].countryCode;
+            code = result[0].countryCode;
             res.status(200).send(code)
 
         }
